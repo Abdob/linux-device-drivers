@@ -1,8 +1,8 @@
 diff --git a/char_assignment/CDD2.c b/char_assignment/CDD2.c
-index 1ace71c..928f811 100644
+index 1ace71c..b71a594 100644
 --- a/char_assignment/CDD2.c
 +++ b/char_assignment/CDD2.c
-@@ -107,41 +107,33 @@ static int CDD_release (struct inode *inode, struct file *file)
+@@ -107,24 +107,18 @@ static int CDD_release (struct inode *inode, struct file *file)
  static ssize_t CDD_read (struct file *file, char *buf, 
  size_t count, loff_t *ppos)
  {
@@ -34,28 +34,7 @@ index 1ace71c..928f811 100644
  }
  
  static ssize_t CDD_write (struct file *file, const char *buf, 
- size_t count, loff_t *ppos)
- {
--	int err, pos=0;
--	struct CDDdev_struct *thisCDD=file->private_data;
--
--	pos=(thisCDD->append)?thisCDD->counter:*ppos;
-+	int err;
-+       	struct CDDdev_struct *thisCDD=file->private_data;
- 
--	err = copy_from_user(&(thisCDD->CDD_storage[pos]),buf,count);
-+	err = copy_from_user(thisCDD->CDD_storage,buf,count);
- 	if (err != 0) return -EFAULT;
- 
- 	thisCDD->counter += count;
--	*ppos+=count;
- 	return count;
- }
-+
- static loff_t CDD_llseek (struct file *file, loff_t newpos, int whence)
- {
-   int pos;
-@@ -174,7 +166,7 @@ static struct file_operations CDD_fops =
+@@ -174,7 +168,7 @@ static struct file_operations CDD_fops =
  	open:		CDD_open, 		// open method 
  	read:   CDD_read,			// read method 
  	write:  CDD_write, 		// write method 
