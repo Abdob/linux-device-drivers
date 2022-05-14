@@ -149,17 +149,4 @@ index 1ace71c..a5ae422 100644
  
  }
  
-@@ -246,11 +211,11 @@ static void CDD_exit(void)
- 	struct CDDdev_struct *thisCDD=&myCDD;
- 
- 	vfree(thisCDD->CDD_storage);
--	
-+        
- 	//  Step 1 of 2:  unregister device with kernel
-  	cdev_del(&thisCDD->cdev);
- 
--	device_destroy(CDD_class, MKDEV(CDDmajor, 0));
-+  device_destroy(CDD_class, MKDEV(CDDmajor, 0));
-   class_destroy(CDD_class);
- 
-  	//  Step 2b of 2:  Release request/reserve of Major Number from Kernel
+
