@@ -1,5 +1,5 @@
 diff --git a/char_assignment/CDD2.c b/char_assignment/CDD2.c
-index 1ace71c..b71a594 100644
+index 87c99b9..b71a594 100644
 --- a/char_assignment/CDD2.c
 +++ b/char_assignment/CDD2.c
 @@ -107,24 +107,18 @@ static int CDD_release (struct inode *inode, struct file *file)
@@ -20,11 +20,11 @@ index 1ace71c..b71a594 100644
 +	err = copy_to_user(buf,thisCDD->CDD_storage,thisCDD->counter);
  
 -	// bzero(buf,64);  // a bogus 64byte initialization
--	memset(buf,0,64);  // a bogus 64byte initialization
+-	// memset(buf,0,64);  // a bogus 64byte initialization
 -	err = copy_to_user(buf,&(thisCDD->CDD_storage[*ppos]),count);
  	if (err != 0) return -EFAULT;
 -	
--	buf[count]=0;
+-	// buf[count]=0;
 -	*ppos += count;
 -	return count;
 +
