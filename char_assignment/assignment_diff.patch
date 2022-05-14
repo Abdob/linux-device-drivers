@@ -1,8 +1,8 @@
 diff --git a/char_assignment/CDD2.c b/char_assignment/CDD2.c
-index 1ace71c..5207c8d 100644
+index 1ace71c..d4018fd 100644
 --- a/char_assignment/CDD2.c
 +++ b/char_assignment/CDD2.c
-@@ -107,65 +107,32 @@ static int CDD_release (struct inode *inode, struct file *file)
+@@ -107,41 +107,33 @@ static int CDD_release (struct inode *inode, struct file *file)
  static ssize_t CDD_read (struct file *file, char *buf, 
  size_t count, loff_t *ppos)
  {
@@ -51,130 +51,25 @@ index 1ace71c..5207c8d 100644
 -	*ppos+=count;
  	return count;
  }
--static loff_t CDD_llseek (struct file *file, loff_t newpos, int whence)
--{
--  int pos;
--	struct CDDdev_struct *thisCDD=file->private_data;
++/*
+ static loff_t CDD_llseek (struct file *file, loff_t newpos, int whence)
+ {
+   int pos;
+@@ -166,7 +158,7 @@ static loff_t CDD_llseek (struct file *file, loff_t newpos, int whence)
+ 	file->f_pos = pos;
+ 	return pos;
+ }
 -
--	switch(whence) {
--		case SEEK_SET:	// CDDoffset can be 0 or +ve
--			pos=newpos;
--			break;
--		case SEEK_CUR:	// CDDoffset can be 0 or +ve
--			pos=(file->f_pos + newpos);
--			break;
--		case SEEK_END:	// CDDoffset can be 0 or +ve
--			pos=(thisCDD->counter + newpos);
--			break;
--		default:
--			return -EINVAL;
--	}
--	if ((pos < 0)||(pos>thisCDD->counter)) 
--		return -EINVAL;
--				
--	file->f_pos = pos;
--	return pos;
--}
- 
++*/
  static struct file_operations CDD_fops =
  {
-diff --git a/char_assignment/assignment_diff.patch b/char_assignment/assignment_diff.patch
-index be7f301..e69de29 100644
---- a/char_assignment/assignment_diff.patch
-+++ b/char_assignment/assignment_diff.patch
-@@ -1,95 +0,0 @@
--diff --git a/char_assignment/CDD2.c b/char_assignment/CDD2.c
--index 1ace71c..a5ae422 100644
----- a/char_assignment/CDD2.c
--+++ b/char_assignment/CDD2.c
--@@ -107,75 +106,41 @@ static int CDD_release (struct inode *inode, struct file *file)
-- static ssize_t CDD_read (struct file *file, char *buf, 
-- size_t count, loff_t *ppos)
-- {
---	int err;
--+	int len, err;
--  	struct CDDdev_struct *thisCDD=file->private_data;
-- 
---  if( *ppos >= thisCDD->counter) return 0;
---  else if( *ppos + count >= thisCDD->counter)
---    count = thisCDD->counter - *ppos;
--+	if( thisCDD->counter <= 0 ) return 0;
-- 
---  if( count <= 0 ) return 0;    
---	printk(KERN_ALERT "CDD_read: count=%lu\n", count);
--+	err = copy_to_user(buf,thisCDD->CDD_storage,thisCDD->counter);
-- 
---	// bzero(buf,64);  // a bogus 64byte initialization
---	memset(buf,0,64);  // a bogus 64byte initialization
---	err = copy_to_user(buf,&(thisCDD->CDD_storage[*ppos]),count);
-- 	if (err != 0) return -EFAULT;
---	
---	buf[count]=0;
---	*ppos += count;
---	return count;
--+
--+	len = thisCDD->counter;
--+	thisCDD->counter = 0;
--+	return len;
-- }
-- 
-- static ssize_t CDD_write (struct file *file, const char *buf, 
-- size_t count, loff_t *ppos)
-- {
---	int err, pos=0;
---	struct CDDdev_struct *thisCDD=file->private_data;
---
---	pos=(thisCDD->append)?thisCDD->counter:*ppos;
--+	int err;
--+       	struct CDDdev_struct *thisCDD=file->private_data;
-- 
---	err = copy_from_user(&(thisCDD->CDD_storage[pos]),buf,count);
--+	err = copy_from_user(thisCDD->CDD_storage,buf,count);
-- 	if (err != 0) return -EFAULT;
-- 
-- 	thisCDD->counter += count;
---	*ppos+=count;
-- 	return count;
-- }
---static loff_t CDD_llseek (struct file *file, loff_t newpos, int whence)
---{
---  int pos;
---	struct CDDdev_struct *thisCDD=file->private_data;
---
---	switch(whence) {
---		case SEEK_SET:	// CDDoffset can be 0 or +ve
---			pos=newpos;
---			break;
---		case SEEK_CUR:	// CDDoffset can be 0 or +ve
---			pos=(file->f_pos + newpos);
---			break;
---		case SEEK_END:	// CDDoffset can be 0 or +ve
---			pos=(thisCDD->counter + newpos);
---			break;
---		default:
---			return -EINVAL;
---	}
---	if ((pos < 0)||(pos>thisCDD->counter)) 
---		return -EINVAL;
---				
---	file->f_pos = pos;
---	return pos;
---}
-- 
-- static struct file_operations CDD_fops =
-- {
-- 	// for LINUX_VERSION_CODE 2.4.0 and later 
-- 	owner:	THIS_MODULE, 	// struct module *owner
---	open:		CDD_open, 		// open method 
---	read:   CDD_read,			// read method 
---	write:  CDD_write, 		// write method 
---	llseek: CDD_llseek,  	// covered in detail in Ch6. Just for fwd ref now.
---	release:CDD_release 	// release method
--+	open:	CDD_open, 	// open method 
--+	read:   CDD_read,	// read method 
--+	write:  CDD_write, 	// write method 
--+	release:  CDD_release 	// release method
-- };
-- 
-- static struct class *CDD_class;
--
+ 	// for LINUX_VERSION_CODE 2.4.0 and later 
+@@ -174,7 +166,7 @@ static struct file_operations CDD_fops =
+ 	open:		CDD_open, 		// open method 
+ 	read:   CDD_read,			// read method 
+ 	write:  CDD_write, 		// write method 
+-	llseek: CDD_llseek,  	// covered in detail in Ch6. Just for fwd ref now.
++	//llseek: CDD_llseek,  	// covered in detail in Ch6. Just for fwd ref now.
+ 	release:CDD_release 	// release method
+ };
+ 
