@@ -118,11 +118,11 @@ size_t count, loff_t *ppos)
 	printk(KERN_ALERT "CDD_read: count=%lu\n", count);
 
 	// bzero(buf,64);  // a bogus 64byte initialization
-	memset(buf,0,64);  // a bogus 64byte initialization
+	// memset(buf,0,64);  // a bogus 64byte initialization
 	err = copy_to_user(buf,&(thisCDD->CDD_storage[*ppos]),count);
 	if (err != 0) return -EFAULT;
 	
-	buf[count]=0;
+	// buf[count]=0;
 	*ppos += count;
 	return count;
 }
