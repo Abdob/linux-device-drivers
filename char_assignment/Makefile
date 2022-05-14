@@ -17,9 +17,9 @@ run: load CDD2app
 	# @ [ -c /dev/CDD2 ] && { echo "Hello World" > /dev/CDD2;};
 	# @ [ -c /dev/CDD2 ] && { cat < /dev/CDD2; };
 	ls -l /dev/CDD2
-	echo "Hello World" > /dev/CDD2;
+	echo "Hello World 0123456789012345678901234567890123456789" > /dev/CDD2;
 	cat < /dev/CDD2;
-	echo "Hello World" > /dev/CDD2;
+	echo "Hello World 0123456789012345678901234567890123456789" > /dev/CDD2;
 	cat < /dev/CDD2;
 	./CDD2app;
 	echo "Hello 147104398721039847123985719823759821751" > /dev/CDD2
