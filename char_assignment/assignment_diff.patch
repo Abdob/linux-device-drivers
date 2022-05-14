@@ -2,24 +2,6 @@ diff --git a/char_assignment/CDD2.c b/char_assignment/CDD2.c
 index 1ace71c..a5ae422 100644
 --- a/char_assignment/CDD2.c
 +++ b/char_assignment/CDD2.c
-@@ -1,12 +1,12 @@
- // Example# 3.6b: Simple Char Driver with Static or Dynamic Major# 
- //		  as requested at install-time.
--//		works only in 2.6 (.. a la Example# 3.2)
-+//                works only in 2.6 (.. a la Example# 3.2)
- 
--//      using dev_t, struct cdev (2.6)	  (example 3.1b)
--//      using myCDD structure		   (example 3.2b)
-+//      using dev_t, struct cdev (2.6)          (example 3.1b)
-+//      using myCDD structure                   (example 3.2b)
- //      using file->private_data structure      (example 3.3b)
--//      using container_of() macro	      (example 3.4b)
--//      using Static/Dynamic Major#	  	(example 3.5b)
-+//      using container_of() macro              (example 3.4b)
-+//      using Static/Dynamic Major#          	(example 3.5b)
- //      using Static/Dynamic Major# as a param  (example 3.6b)
- //      using O_TRUNC and O_APPEND				(here .. example 3.7b)
- 
 @@ -55,42 +55,41 @@ static unsigned int CDDparm = CDDMAJOR;
  dev_t   firstdevno;
  struct CDDdev_struct {
