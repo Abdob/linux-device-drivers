@@ -1,0 +1,4 @@
+
+
+
+while ((c=getchar())!=EOF)
