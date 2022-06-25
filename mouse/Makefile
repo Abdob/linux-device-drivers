@@ -7,7 +7,6 @@ all:
 	$(MAKE) -C $(KDIR) M=$(PWD) modules
 	insmod ./mouse.ko;
 	mknod -m 666 /dev/mouse c 32 0;
-	echo "" > /dev/mouse;
 	cat < /dev/mouse;
 
 compile:

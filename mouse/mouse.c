@@ -1,5 +1,5 @@
 #include <linux/version.h>
-#include <generated/utsrelease.h> // kernel version > 2.6
+#include <generated/utsrelease.h>
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -8,7 +8,7 @@
 #include <linux/mm.h>
 #include <linux/cdev.h>		
 #include <asm/uaccess.h>
-#include <linux/uaccess.h> // kernel >= 4.12
+#include <linux/uaccess.h>
 
 
 MODULE_LICENSE("GPL"); 
@@ -25,7 +25,7 @@ dev_t  devno;
 
 static int mouse_open (struct inode *inode, struct file *file)
 {
-	printk("mouse write\n");
+	printk("mouse open\n");
 	return 0;
 }
 
@@ -44,16 +44,14 @@ static ssize_t mouse_read (struct file *file, char *buf, size_t count, loff_t *p
 
 static ssize_t mouse_write (struct file *file, const char __user *buf, size_t count, loff_t *ppos)
 {
-
-	printk("mouse write\n");
-	return count;
+	return 0;
 }
 
 static struct file_operations mouse_fops =
 {
 	// for LINUX_VERSION_CODE 2.4.0 and later 
 	owner:		THIS_MODULE, 	// struct module *owner
-	open:			mouse_open, 		// open method 
+	open:		mouse_open, 		// open method 
 	read:   	mouse_read,			// read method 
 	write:  	mouse_write, 		// write method 
 	release:	mouse_release 	// release method .. for close() system call
@@ -83,7 +81,7 @@ static void mouse_exit(void)
 {
 	//  Step 1 of 2:  unregister device with kernel
 	cdev_del(&cdev);
-
+	printk("Unregistered mouse\n");
 	//  Step 2 of 2:  Release request/reserve of Major Number from Kernel
 	unregister_chrdev_region(devno, MOUSENUMDEVS);
 }
