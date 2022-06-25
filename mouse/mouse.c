@@ -21,41 +21,31 @@ MODULE_LICENSE("GPL");
 unsigned int counter = 0;
 struct cdev cdev;
 dev_t  devno;
-char mouse_buf[4096];
-char *mouse_storage=mouse_buf;
+
 
 static int mouse_open (struct inode *inode, struct file *file)
 {
+	printk("mouse write\n");
 	return 0;
 }
 
 static int mouse_release (struct inode *inode, struct file *file)
 {
+	printk("mouse release\n");
 	return 0;
 }
 
 static ssize_t mouse_read (struct file *file, char *buf, size_t count, loff_t *ppos)
 {
-	int len, err;
-	if( counter <= 0 ) return 0;
-	err = copy_to_user(buf,mouse_storage,counter);
-
-	if (err != 0) return -EFAULT;
-
-	len = counter;
-	counter = 0;
-	return len;
+	printk("mouse read\n");
+	return 0;
 }
 
 
 static ssize_t mouse_write (struct file *file, const char __user *buf, size_t count, loff_t *ppos)
 {
-	int err;
-	err = copy_from_user(mouse_storage,buf,count);
-	if (err != 0) return -EFAULT;
-	
-	// typically, my device access would be here.  
-	counter += count; 
+
+	printk("mouse write\n");
 	return count;
 }
 
@@ -77,7 +67,7 @@ static int mouse_init(void)
 
 	i = register_chrdev_region(devno,MOUSENUMDEVS,MOUSE);
 	if (i < 0) { printk(KERN_ALERT "Error (%d) adding mouse", i); return i;}
-
+	printk("Registered mouse\n");
 	cdev_init(&cdev, NULL);
 
 	//  Step 2b of 2:  register device with kernel

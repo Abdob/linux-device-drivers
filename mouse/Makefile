@@ -5,11 +5,9 @@ obj-m := mouse.o
 
 all: 
 	$(MAKE) -C $(KDIR) M=$(PWD) modules
-	-su -c "insmod ./mouse.ko; mknod -m 666 /dev/mouse c 32 0;"
-	ls -l /dev/mouse
-	echo "Hello World" > /dev/mouse;
-	cat < /dev/mouse;
-	echo "Hello Universe" > /dev/mouse;
+	insmod ./mouse.ko;
+	mknod -m 666 /dev/mouse c 32 0;
+	echo "" > /dev/mouse;
 	cat < /dev/mouse;
 
 compile:
